@@ -1,0 +1,21 @@
+{% load static %}<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entrar · Casa das Ideias</title>
+<link rel="stylesheet" href="{% static 'gestao/base.css' %}"></head>
+<body>
+<header><div><div class="brand">Casa das Ideias</div><div class="sub">Gestão de oficinas</div></div></header>
+<main class="login">
+<h1>Entrar</h1>
+{% if form.non_field_errors %}<div class="banner erro" role="alert"><span aria-hidden="true">⚠</span><span>{{ form.non_field_errors.0 }}</span></div>{% endif %}
+<form method="post">{% csrf_token %}
+  <label for="id_username">Usuário</label>
+  <input type="text" name="username" id="id_username" autocomplete="username" required autofocus>
+  <label for="id_password">Senha</label>
+  <input type="password" name="password" id="id_password" autocomplete="current-password" required
+         style="width:100%;min-height:48px;padding:0 12px;border:2px solid #5F6B76;border-radius:8px;font-size:17px">
+  <button class="btn" type="submit">Entrar</button>
+</form>
+<div class="foot">MVP ilustrativo · dados fictícios gerados por IA</div>
+</main>
+</body></html>

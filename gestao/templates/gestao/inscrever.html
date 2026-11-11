@@ -1,0 +1,24 @@
+{% extends "gestao/base.html" %}
+{% block titulo %}Inscrever{% endblock %}
+{% block conteudo %}
+<h1>Inscrever participante</h1>
+{% if form.non_field_errors %}<div class="banner erro" role="alert"><span aria-hidden="true">⚠</span><span>{{ form.non_field_errors.0 }}</span></div>{% endif %}
+<form method="post" novalidate>{% csrf_token %}
+  <input type="hidden" name="oficina" value="{{ oficina.pk }}">
+  <label>Oficina</label>
+  <div class="field">{{ oficina.nome }} · {{ oficina.horario_texto }}</div>
+  <div class="hint">{% if oficina.lotada %}Oficina lotada: a inscrição entrará na lista de espera.{% else %}{{ oficina.vagas_livres }} vagas livres nesta oficina.{% endif %}</div>
+
+  {% for campo in form %}
+  <div class="{% if campo.errors %}campo-erro{% endif %}">
+    <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+    {{ campo }}
+    {% if campo.name == 'data_nascimento' %}<div class="hint">Formato dia/mês/ano. Menor de 18 anos: informe o responsável.</div>{% endif %}
+    {% for e in campo.errors %}<div class="msg-err" role="alert"><span aria-hidden="true">⚠</span> {{ e }}</div>{% endfor %}
+  </div>
+  {% endfor %}
+
+  <button class="btn" type="submit">Confirmar inscrição</button>
+  <a class="btn sec" href="{% url 'vagas' %}">Voltar para Vagas</a>
+</form>
+{% endblock %}

@@ -1,0 +1,52 @@
+:root{--ink:#1A1A1A;--muted:#4A4A4A;--bg:#F4F6F8;--card:#FFFFFF;--line:#C9D1D9;--primary:#0B5CAD;--ok:#1B5E20;--okbg:#E6F4EA;--bad:#B71C1C;--badbg:#FDECEA;--warn:#7A4B00;--warnbg:#FFF4D6}
+*{box-sizing:border-box}
+body{margin:0 auto;max-width:480px;background:var(--bg);color:var(--ink);font-family:"Noto Sans","DejaVu Sans",Arial,sans-serif;font-size:17px;line-height:1.35}
+header{background:var(--primary);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+header .brand{font-size:19px;font-weight:700}
+header .sub{font-size:13px;opacity:.95}
+.sair{min-height:44px;min-width:64px;border:2px solid #fff;color:#fff;background:transparent;border-radius:8px;font-size:16px;font-weight:600;padding:0 12px}
+nav{display:flex;background:#fff;border-bottom:1px solid var(--line)}
+nav a{flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:var(--primary);text-decoration:none;border-bottom:4px solid transparent}
+nav a.on{color:var(--ink);border-bottom-color:var(--primary);background:#EEF4FB}
+main{padding:16px}
+h1{font-size:22px;margin:4px 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.card h2{font-size:19px;margin:0 0 2px}
+.meta{color:var(--muted);font-size:15px;margin-bottom:8px}
+.nums{font-size:16px;margin:6px 0 10px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:15px;padding:6px 10px;border-radius:999px;border:2px solid}
+.b-ok{color:var(--ok);background:var(--okbg);border-color:var(--ok)}
+.b-bad{color:var(--bad);background:var(--badbg);border-color:var(--bad)}
+.b-warn{color:var(--warn);background:var(--warnbg);border-color:var(--warn)}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border-radius:10px;font-size:17px;font-weight:700;border:2px solid var(--primary);background:var(--primary);color:#fff;margin-top:12px}
+.btn.sec{background:#fff;color:var(--primary)}
+label{display:block;font-weight:700;margin:14px 0 6px;font-size:16px}
+.field{min-height:48px;display:flex;align-items:center;padding:0 12px;border:2px solid #5F6B76;border-radius:8px;background:#fff;font-size:17px}
+.field.err{border-color:var(--bad);background:#fff}
+.msg-err{color:var(--bad);font-weight:700;font-size:15px;margin-top:6px}
+.hint{color:var(--muted);font-size:14px;margin-top:4px}
+.foot{font-size:12px;color:var(--muted);text-align:center;padding:10px 0 16px}
+.banner{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:10px;border:2px solid var(--ok);background:var(--okbg);color:var(--ok);font-weight:700;font-size:16px;margin-bottom:14px}
+.row{display:flex;gap:10px;margin-top:10px}
+.pbtn{flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:2px solid #5F6B76;background:#fff;font-size:16px;font-weight:700;color:var(--ink)}
+.pbtn.p-on{background:var(--ok);border-color:var(--ok);color:#fff}
+.pbtn.a-on{background:var(--bad);border-color:var(--bad);color:#fff}
+.pers{display:flex;justify-content:space-between;align-items:center}
+.faltas{font-size:15px;color:var(--muted)}
+.radio{display:flex;align-items:center;gap:10px;min-height:48px;font-size:17px}
+.dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--primary);display:inline-flex;align-items:center;justify-content:center}
+.dot i{width:12px;height:12px;border-radius:50%;background:var(--primary);display:block}
+
+input[type=text],input[type=tel],input[type=date],select{width:100%;min-height:48px;padding:0 12px;border:2px solid #5F6B76;border-radius:8px;background:#fff;font-size:17px;font-family:inherit;color:var(--ink)}
+input:focus,select:focus,button:focus,a:focus{outline:3px solid #FFB000;outline-offset:2px}
+.campo-erro input,.campo-erro select{border-color:var(--bad)}
+button.btn{cursor:pointer;font-family:inherit}
+.banner.aviso{border-color:var(--warn);background:var(--warnbg);color:var(--warn)}
+.banner.erro{border-color:var(--bad);background:var(--badbg);color:var(--bad)}
+.sair-form{margin:0}
+a.btn{text-decoration:none}
+.skip{position:absolute;left:-999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:8px;z-index:10}
+.pbtn{cursor:pointer;font-family:inherit}
+form.linha{margin:0;display:contents}
+.login{margin-top:40px}

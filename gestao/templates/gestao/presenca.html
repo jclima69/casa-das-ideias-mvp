@@ -1,0 +1,34 @@
+{% extends "gestao/base.html" %}
+{% block titulo %}Presença{% endblock %}
+{% block conteudo %}
+<h1>Presença<br><span style="font-size:16px;font-weight:600;color:#4A4A4A">{{ oficina.nome }} · {{ data_encontro|date:"d/m/Y" }}</span></h1>
+<form method="get">
+  <label for="sel-oficina">Oficina</label>
+  <select id="sel-oficina" name="oficina" onchange="this.form.submit()">
+    {% for o in oficinas %}<option value="{{ o.pk }}" {% if o.pk == oficina.pk %}selected{% endif %}>{{ o.nome }}</option>{% endfor %}
+  </select>
+  <input type="hidden" name="data" value="{{ data_encontro|date:'Y-m-d' }}">
+  <noscript><button class="btn sec" type="submit">Trocar oficina</button></noscript>
+</form>
+
+{% for l in linhas %}
+<div class="card">
+  <div class="pers"><b>{{ l.inscricao.participante.nome_completo }}</b>
+    {% if l.alerta %}<span class="badge b-warn"><span aria-hidden="true">⚠</span> {{ l.faltas }} faltas</span>
+    {% else %}<span class="faltas">{{ l.faltas }} falta{{ l.faltas|pluralize }}</span>{% endif %}
+  </div>
+  <form method="post" class="row">{% csrf_token %}
+    <input type="hidden" name="oficina" value="{{ oficina.pk }}">
+    <input type="hidden" name="data" value="{{ data_encontro|date:'Y-m-d' }}">
+    <input type="hidden" name="inscricao" value="{{ l.inscricao.pk }}">
+    <button type="submit" name="presente" value="1" class="pbtn {% if l.estado is True %}p-on{% endif %}" {% if l.estado is True %}aria-pressed="true"{% endif %}><span aria-hidden="true">✔</span> Presente</button>
+    <button type="submit" name="presente" value="0" class="pbtn {% if l.estado is False %}a-on{% endif %}" {% if l.estado is False %}aria-pressed="true"{% endif %}><span aria-hidden="true">✖</span> Ausente</button>
+  </form>
+</div>
+{% empty %}
+<p>Nenhuma inscrição confirmada nesta oficina.</p>
+{% endfor %}
+
+<a class="btn" href="{% url 'inscrever' %}?oficina={{ oficina.pk }}">Inscrever outra pessoa</a>
+<a class="btn sec" href="{% url 'vagas' %}">Voltar para Vagas</a>
+{% endblock %}

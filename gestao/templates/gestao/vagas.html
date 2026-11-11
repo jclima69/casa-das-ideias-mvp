@@ -1,0 +1,21 @@
+{% extends "gestao/base.html" %}
+{% block titulo %}Vagas{% endblock %}
+{% block conteudo %}
+<h1>Vagas por oficina</h1>
+{% for o in oficinas %}
+<div class="card">
+  <h2>{{ o.nome }}</h2>
+  <div class="meta">{{ o.horario_texto }}</div>
+  <div class="nums">{{ o.vagas }} vagas · {{ o.vagas_ocupadas }} ocupadas · <b>{{ o.vagas_livres }} vagas livres</b>{% if o.em_espera %} · {{ o.em_espera }} em espera{% endif %}</div>
+  {% if o.lotada %}
+    <span class="badge b-bad"><span aria-hidden="true">✖</span> Lotada</span>
+    <a class="btn sec" href="{% url 'inscrever' %}?oficina={{ o.pk }}">Inscrever na lista de espera</a>
+  {% else %}
+    <span class="badge b-ok"><span aria-hidden="true">✔</span> Há vagas</span>
+    <a class="btn" href="{% url 'inscrever' %}?oficina={{ o.pk }}">Inscrever</a>
+  {% endif %}
+</div>
+{% empty %}
+<p>Nenhuma oficina ativa cadastrada.</p>
+{% endfor %}
+{% endblock %}

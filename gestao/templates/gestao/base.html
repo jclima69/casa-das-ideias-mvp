@@ -1,0 +1,27 @@
+{% load static %}<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block titulo %}Casa das Ideias{% endblock %} · Casa das Ideias</title>
+<link rel="stylesheet" href="{% static 'gestao/base.css' %}">
+</head>
+<body>
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+<header>
+  <div><div class="brand">Casa das Ideias</div><div class="sub">{{ request.user.get_username }}</div></div>
+  <form method="post" action="{% url 'logout' %}" class="sair-form">{% csrf_token %}<button class="sair" type="submit">Sair</button></form>
+</header>
+<nav aria-label="Principal">
+  <a href="{% url 'vagas' %}" {% if aba == 'vagas' %}class="on" aria-current="page"{% endif %}>Vagas</a>
+  <a href="{% url 'presenca' %}" {% if aba == 'presenca' %}class="on" aria-current="page"{% endif %}>Presença</a>
+</nav>
+<main id="conteudo">
+{% for m in messages %}
+  <div class="banner {% if m.level_tag == 'warning' %}aviso{% elif m.level_tag == 'error' %}erro{% endif %}" role="status"><span aria-hidden="true">{% if m.level_tag == 'success' %}✔{% else %}⚠{% endif %}</span><span>{{ m }}</span></div>
+{% endfor %}
+{% block conteudo %}{% endblock %}
+<div class="foot">MVP ilustrativo · dados fictícios gerados por IA</div>
+</main>
+</body>
+</html>
