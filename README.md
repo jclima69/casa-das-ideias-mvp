@@ -10,8 +10,8 @@ Projeto da disciplina de Projeto de Software (ADS). Alinhado ao **ODS 4** (Educa
 
 A investigação com o parceiro e as rodadas de validação foram feitas por **modelo fictício, com dados gerados
 por inteligência artificial (IA)**. O motivo é que a autoria **não pôde realizar pesquisa de campo por problemas
-de saúde**, e o modelo foi **autorizado pelo tutor e pela coordenação do curso**. Nomes, participantes, falas,
-tempos e notas são ilustrativos e **não representam pessoas reais**. Os dados de demonstração também são fictícios.
+de saúde**, e o modelo foi **autorizado pelo tutor**. Nomes, participantes, falas, tempos e notas
+são ilustrativos e **não representam pessoas reais**. Os dados de demonstração também são fictícios.
 
 ## Funcionalidades
 
