@@ -84,6 +84,8 @@ SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_HTTPONLY = True
 LOGIN_ATTEMPT_LIMIT = 5
 LOGIN_LOCKOUT_SECONDS = 15 * 60
+# RF07 — quantidade de faltas a partir da qual a Tela 3 mostra o alerta ⚠.
+LIMITE_FALTAS_ALERTA = int(os.environ.get("LIMITE_FALTAS_ALERTA", "2"))
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "vagas"
 LOGOUT_REDIRECT_URL = "login"

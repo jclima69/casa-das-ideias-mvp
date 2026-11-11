@@ -130,7 +130,7 @@ def presenca(request):
             {
                 "inscricao": insc,
                 "faltas": insc.faltas,
-                "alerta": insc.faltas >= 2,
+                "alerta": insc.faltas >= settings.LIMITE_FALTAS_ALERTA,
                 "estado": None if registro is None else registro.presente,
             }
         )

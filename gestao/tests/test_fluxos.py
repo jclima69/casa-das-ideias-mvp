@@ -4,7 +4,7 @@ import datetime as dt
 
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from gestao import services
@@ -158,6 +158,12 @@ class PresencaFluxoTests(BaseLogado):
         self.assertContains(r, "Ana Lima")
         self.assertContains(r, "0 faltas")
         self.assertContains(r, "⚠")
+        self.assertContains(r, "2 faltas")
+
+    @override_settings(LIMITE_FALTAS_ALERTA=3)
+    def test_limite_de_alerta_e_configuravel(self):
+        r = self.client.get(f"/presenca/?oficina={self.oficina.pk}&data=2026-11-14")
+        self.assertNotContains(r, "⚠")
         self.assertContains(r, "2 faltas")
 
     def test_marca_presente_e_ausente(self):
