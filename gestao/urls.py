@@ -9,4 +9,5 @@ urlpatterns = [
     path("presenca/", views.presenca, name="presenca"),
     path("entrar/", views.LoginComBloqueio.as_view(), name="login"),
     path("sair/", LogoutView.as_view(), name="logout"),
+    path("saude/", views.saude, name="saude"),
 ]

@@ -3,6 +3,8 @@
 import os
 from pathlib import Path
 
+from .dburl import banco_de_url
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "inseguro-somente-para-desenvolvimento-local")
@@ -10,6 +12,12 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 ALLOWED_HOSTS = [
     h for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,testserver").split(",") if h
 ]
+CSRF_TRUSTED_ORIGINS = [o for o in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if o]
+# O Render informa o endereço público do serviço nesta variável.
+_host_render = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if _host_render:
+    ALLOWED_HOSTS.append(_host_render)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{_host_render}")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -51,8 +59,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# Banco: SQLite local; em produção use DATABASE_URL-like via variáveis (PostgreSQL).
-if os.environ.get("POSTGRES_DB"):
+# Banco: SQLite local; na nuvem, PostgreSQL via DATABASE_URL ou via variáveis POSTGRES_*.
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {"default": banco_de_url(os.environ["DATABASE_URL"])}
+elif os.environ.get("POSTGRES_DB"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -96,7 +106,10 @@ CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    # Atrás do proxy do provedor, o HTTPS chega no cabeçalho X-Forwarded-Proto.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SSL_REDIRECT", "1") == "1"
+    SECURE_REDIRECT_EXEMPT = [r"^saude/$"]  # monitores podem consultar por HTTP simples
     SECURE_HSTS_SECONDS = 31536000
     SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"

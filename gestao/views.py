@@ -5,7 +5,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.core.cache import cache
+from django.db import connection
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_safe
 
 from . import services
 from .forms import InscricaoForm
@@ -150,3 +153,14 @@ def presenca(request):
         "aba": "presenca",
     }
     return render(request, "gestao/presenca.html", contexto)
+
+
+@require_safe
+def saude(request):
+    """Verificação de saúde para monitoramento: responde 200 se a aplicação e o banco estão de pé."""
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+    except Exception:
+        return JsonResponse({"status": "erro"}, status=503)
+    return JsonResponse({"status": "ok"})
