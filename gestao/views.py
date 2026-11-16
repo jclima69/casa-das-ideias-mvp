@@ -121,7 +121,10 @@ def presenca(request):
         )
         presente = request.POST.get("presente") == "1"
         services.registrar_presenca(inscricao, data_encontro, presente)
-        return redirect(f"/presenca/?oficina={oficina.pk}&data={data_encontro.isoformat()}")
+        # O fragmento #pessoa-<id> mantém a posição na lista depois de marcar.
+        return redirect(
+            f"/presenca/?oficina={oficina.pk}&data={data_encontro.isoformat()}#pessoa-{inscricao.pk}"
+        )
 
     linhas = []
     for insc in oficina.inscricoes.filter(situacao=Inscricao.CONFIRMADA).select_related("participante"):

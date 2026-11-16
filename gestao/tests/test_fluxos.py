@@ -173,6 +173,16 @@ class PresencaFluxoTests(BaseLogado):
         self.assertFalse(Presenca.objects.get(inscricao=self.bruno, data_encontro="2026-11-14").presente)
         self.assertEqual(self.bruno.faltas, 3)
 
+    def test_apos_marcar_volta_para_a_mesma_pessoa_na_lista(self):
+        r = self.marcar(self.bruno, "0")
+        self.assertEqual(r.status_code, 302)
+        self.assertTrue(r["Location"].endswith(f"#pessoa-{self.bruno.pk}"))
+
+    def test_cada_pessoa_tem_ancora_na_lista(self):
+        r = self.client.get(f"/presenca/?oficina={self.oficina.pk}&data=2026-11-14")
+        self.assertContains(r, f'id="pessoa-{self.ana.pk}"')
+        self.assertContains(r, f'id="pessoa-{self.bruno.pk}"')
+
     def test_estado_e_exibido_com_texto(self):
         self.marcar(self.ana, "1")
         r = self.client.get(f"/presenca/?oficina={self.oficina.pk}&data=2026-11-14")
