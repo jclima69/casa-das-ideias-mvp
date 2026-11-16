@@ -41,3 +41,23 @@ class InscricaoFormTests(TestCase):
 
     def test_nome_obrigatorio(self):
         self.assertIn("nome_completo", InscricaoForm(dados(nome_completo="")).errors)
+
+
+class DataSemBarrasTests(TestCase):
+    def test_aceita_data_sem_barras(self):
+        f = InscricaoForm(dados(data_nascimento="10032012"))
+        self.assertTrue(f.is_valid(), f.errors)
+        self.assertEqual(f.cleaned_data["data_nascimento"].isoformat(), "2012-03-10")
+
+    def test_aceita_data_com_hifens(self):
+        f = InscricaoForm(dados(data_nascimento="10-03-2012"))
+        self.assertTrue(f.is_valid(), f.errors)
+
+    def test_aceita_data_com_espacos_nas_pontas(self):
+        self.assertTrue(InscricaoForm(dados(data_nascimento=" 10/03/2012 ")).is_valid())
+
+    def test_rejeita_data_sem_barras_impossivel(self):
+        self.assertIn("data_nascimento", InscricaoForm(dados(data_nascimento="31022012")).errors)
+
+    def test_rejeita_numero_com_tamanho_errado(self):
+        self.assertIn("data_nascimento", InscricaoForm(dados(data_nascimento="1003201")).errors)

@@ -13,7 +13,7 @@
   <div class="{% if campo.errors %}campo-erro{% endif %}">
     <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
     {{ campo }}
-    {% if campo.name == 'data_nascimento' %}<div class="hint">Formato dia/mês/ano. Menor de 18 anos: informe o responsável.</div>{% endif %}
+    {% if campo.name == 'data_nascimento' %}<div class="hint">Dia, mês e ano, com ou sem barras (10/03/2012 ou 10032012). Menor de 18 anos: informe o responsável.</div>{% endif %}
     {% for e in campo.errors %}<div class="msg-err" role="alert"><span aria-hidden="true">⚠</span> {{ e }}</div>{% endfor %}
   </div>
   {% endfor %}
