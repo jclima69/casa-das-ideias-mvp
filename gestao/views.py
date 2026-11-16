@@ -79,11 +79,16 @@ def inscrever(request):
             else:
                 oficina.refresh_from_db()
                 if inscricao.situacao == Inscricao.EM_ESPERA:
+                    posicao = oficina.inscricoes.filter(
+                        situacao=Inscricao.EM_ESPERA, data_hora_inscricao__lte=inscricao.data_hora_inscricao
+                    ).count()
                     messages.warning(
                         request,
                         f"Oficina lotada: {participante.nome_completo} entrou na lista de espera "
-                        f"de {oficina.nome}.",
+                        f"de {oficina.nome}, na posição {posicao}.",
                     )
+                    # A pessoa em espera não aparece na Presença; a confirmação fica em Vagas.
+                    return redirect("vagas")
                 else:
                     livres = oficina.vagas_livres
                     texto_vagas = "1 vaga livre" if livres == 1 else f"{livres} vagas livres"
