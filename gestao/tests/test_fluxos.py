@@ -122,12 +122,21 @@ class InscricaoFluxoTests(BaseLogado):
     def test_oficina_lotada_entra_na_lista_de_espera(self):
         services.inscrever(criar_pessoa("A"), self.oficina)
         services.inscrever(criar_pessoa("B"), self.oficina)
-        self.post()
+        r = self.client.post(self.URL, dict(self.DADOS, oficina=self.oficina.pk), follow=True)
         self.assertEqual(
             Inscricao.objects.get(participante__nome_completo="Marina Souza").situacao, Inscricao.EM_ESPERA
         )
-        r = self.client.get(f"/presenca/?oficina={self.oficina.pk}")
-        self.assertContains(r, "lista de espera")
+        # A confirmação da espera aparece na tela Vagas, onde o contador de espera sobe.
+        self.assertEqual(r.redirect_chain[-1][0], reverse("vagas"))
+        self.assertContains(r, "entrou na lista de espera de Violão iniciante, na posição 1")
+        self.assertContains(r, "1 em espera")
+
+    def test_posicao_na_fila_considera_quem_ja_esta_esperando(self):
+        services.inscrever(criar_pessoa("A"), self.oficina)
+        services.inscrever(criar_pessoa("B"), self.oficina)
+        services.inscrever(criar_pessoa("C"), self.oficina)
+        r = self.client.post(self.URL, dict(self.DADOS, oficina=self.oficina.pk), follow=True)
+        self.assertContains(r, "na posição 2")
 
     def test_participante_existente_pode_ser_escolhido(self):
         p = criar_pessoa("Ana Lima")
@@ -172,6 +181,16 @@ class PresencaFluxoTests(BaseLogado):
         self.assertTrue(Presenca.objects.get(inscricao=self.ana, data_encontro="2026-11-14").presente)
         self.assertFalse(Presenca.objects.get(inscricao=self.bruno, data_encontro="2026-11-14").presente)
         self.assertEqual(self.bruno.faltas, 3)
+
+    def test_apos_marcar_volta_para_a_mesma_pessoa_na_lista(self):
+        r = self.marcar(self.bruno, "0")
+        self.assertEqual(r.status_code, 302)
+        self.assertTrue(r["Location"].endswith(f"#pessoa-{self.bruno.pk}"))
+
+    def test_cada_pessoa_tem_ancora_na_lista(self):
+        r = self.client.get(f"/presenca/?oficina={self.oficina.pk}&data=2026-11-14")
+        self.assertContains(r, f'id="pessoa-{self.ana.pk}"')
+        self.assertContains(r, f'id="pessoa-{self.bruno.pk}"')
 
     def test_estado_e_exibido_com_texto(self):
         self.marcar(self.ana, "1")

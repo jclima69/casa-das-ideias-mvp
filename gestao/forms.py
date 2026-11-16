@@ -6,6 +6,19 @@ from django import forms
 from .models import Participante
 
 
+class DataBrasileiraField(forms.DateField):
+    """Aceita 10/03/2012, 10-03-2012 e também 10032012 (sem separadores)."""
+
+    def to_python(self, value):
+        if isinstance(value, str):
+            texto = value.strip()
+            if re.fullmatch(r"\d{8}", texto):
+                value = f"{texto[:2]}/{texto[2:4]}/{texto[4:]}"
+            else:
+                value = texto.replace("-", "/") if re.fullmatch(r"\d{2}-\d{2}-\d{4}", texto) else texto
+        return super().to_python(value)
+
+
 class InscricaoForm(forms.Form):
     """Formulário da Tela 2 — Inscrever participante (RF01, RF04, RF05)."""
 
@@ -16,7 +29,7 @@ class InscricaoForm(forms.Form):
         empty_label="Novo participante",
     )
     nome_completo = forms.CharField(label="Nome completo", max_length=150, required=False)
-    data_nascimento = forms.DateField(
+    data_nascimento = DataBrasileiraField(
         label="Data de nascimento", required=False, input_formats=["%d/%m/%Y", "%Y-%m-%d"]
     )
     telefone = forms.CharField(label="Telefone (com DDD)", max_length=20, required=False)
@@ -36,7 +49,7 @@ class InscricaoForm(forms.Form):
             self.add_error("nome_completo", "Informe o nome completo.")
         nasc = dados.get("data_nascimento")
         if not nasc and not self.has_error("data_nascimento"):
-            self.add_error("data_nascimento", "Informe a data de nascimento. Exemplo: 10/03/2012")
+            self.add_error("data_nascimento", "Informe a data de nascimento. Exemplo: 10/03/2012 ou 10032012")
         elif nasc and nasc > date.today():
             self.add_error("data_nascimento", "A data de nascimento não pode ser no futuro.")
         if not dados.get("telefone") and not self.has_error("telefone"):
